@@ -1,10 +1,20 @@
 connect 'jdbc:derby:memory:sample;create=true';
 
-create table person(
-	id bigint not null generated always as identity (start with 1, increment by 1),
+-- in case these are left over from previous tests...
+drop table Pet;
+drop table Person;
+
+create table Person(
+	id bigint not null generated always as identity (start with 1, increment by 1) constraint person_pk primary key,
 	firstname varchar(50),
 	middlename varchar(50),
 	lastname varchar(50)
+);
+
+create table Pet(
+	id bigint not null generated always as identity (start with 1, increment by 1),
+	personId bigint not null constraint pet_fk references Person,
+	name varchar(50)
 );
 
 insert into person (firstname, middlename, lastname) values ('George', null, 'Washington');

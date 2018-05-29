@@ -10,8 +10,12 @@ import org.apache.derby.drda.NetworkServerControl;
 import org.apache.ibatis.session.SqlSessionManager;
 import org.junit.After;
 import org.junit.Before;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class AbstractMapperTest extends AbstractTest {
+
+	private static final Logger log = LoggerFactory.getLogger(AbstractMapperTest.class);
 
 	private static final Injector injector = Guice.createInjector(
 			new GuiceModule(),
@@ -29,15 +33,20 @@ public abstract class AbstractMapperTest extends AbstractTest {
 	@Before
 	public void beforeAbstractMapperTest() throws Exception {
 		injector.injectMembers(this);
-		sqlSessionManager.startManagedSession();
 		derbyHelper.init(true);
+		sqlSessionManager.startManagedSession();
 	}
 
 	@After
 	public void afterAbstractMapperTest() throws Exception {
 		sqlSessionManager.rollback(true);
 		sqlSessionManager.close();
-		derbyHelper.destroy(networkServerControl);
+		try {
+			derbyHelper.destroy(networkServerControl);
+		} catch (final Exception e) {
+			// this can fail sometimes...if it does, swallow it.
+			log.warn(e.toString(), e);
+		}
 	}
 
 }

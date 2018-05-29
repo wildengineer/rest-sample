@@ -12,6 +12,7 @@ Implement an appropriate API to allow a client application to:
 - create an additional person
 - update a person
 - delete a person
+- create, read, update, and delete pets associated with people (remember: person id is required)
 
 Follow the pattern used by the existing endpoint, using the existing 
 `PersonResource` resource class.
