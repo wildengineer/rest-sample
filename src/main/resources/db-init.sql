@@ -13,7 +13,7 @@ create table Person(
 
 create table Pet(
 	id bigint not null generated always as identity (start with 1, increment by 1),
-	personId bigint not null constraint pet_fk references Person,
+	personId bigint not null constraint pet_fk references Person on delete cascade on update restrict,
 	name varchar(50)
 );
 
