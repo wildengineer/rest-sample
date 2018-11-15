@@ -9,9 +9,13 @@ import com.hoopladigital.guice.SampleMyBatisModule;
 import org.apache.derby.drda.NetworkServerControl;
 import org.apache.ibatis.session.SqlSessionManager;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.sql.DriverManager;
 
 public abstract class AbstractMapperTest extends AbstractTest {
 
@@ -23,29 +27,40 @@ public abstract class AbstractMapperTest extends AbstractTest {
 	);
 
 	@Inject
-	private DerbyHelper derbyHelper;
+	private static DerbyHelper derbyHelper;
 	@Inject
-	private NetworkServerControl networkServerControl;
+	private static NetworkServerControl networkServerControl;
 
 	@Inject
 	private SqlSessionManager sqlSessionManager;
 
+	@BeforeClass
+	public static void beforeAbstractMapperTestClass() throws Exception {
+		derbyHelper = injector.getInstance(DerbyHelper.class);
+		networkServerControl = injector.getInstance(NetworkServerControl.class);
+		derbyHelper.init(true);
+	}
+
 	@Before
 	public void beforeAbstractMapperTest() throws Exception {
+		DriverManager.registerDriver(new org.apache.derby.jdbc.EmbeddedDriver());
 		injector.injectMembers(this);
-		derbyHelper.init(true);
 		sqlSessionManager.startManagedSession();
 	}
 
 	@After
-	public void afterAbstractMapperTest() throws Exception {
+	public void afterAbstractMapperTest() {
 		sqlSessionManager.rollback(true);
 		sqlSessionManager.close();
+	}
+
+	@AfterClass
+	public static void afterAbstractMapperTestClass(){
 		try {
 			derbyHelper.destroy(networkServerControl);
 		} catch (final Exception e) {
 			// this can fail sometimes...if it does, swallow it.
-			log.warn(e.toString(), e);
+			log.warn(e.toString());
 		}
 	}
 
