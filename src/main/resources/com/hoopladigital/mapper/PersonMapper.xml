@@ -14,4 +14,33 @@
 		order by id
 	</select>
 
+	<select id="getPersonById" resultType="Person">
+		select
+			id,
+			firstName,
+			middleName,
+			lastName
+		from Person
+		where id = #{id}
+		order by id
+	</select>
+
+	<insert id="createPerson" parameterType="Person" useGeneratedKeys="true" keyProperty="id">
+	  	insert into Person (firstName, middleName, lastName)
+		values (#{firstName}, #{middleName}, #{lastName})
+	</insert>
+
+	<update id="updatePerson" parameterType="Person">
+		update Person set
+		firstName = #{firstName},
+		middleName = #{middleName},
+		lastName = #{lastName}
+		where id = #{id}
+	</update>
+
+	<delete id="deletePerson">
+		delete from Person
+		where id = #{id}
+	</delete>
+
 </mapper>

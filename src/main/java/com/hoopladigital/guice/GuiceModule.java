@@ -25,16 +25,6 @@ public class GuiceModule extends EnvironmentSettingsModule {
 			log.debug("Registering resource {}", resourceClass);
 			binder.bind(resourceClass);
 		}
-
-//		for (final Class converterClass : getClasses("com.hoopladigital.converter")) {
-//			log.debug("Registering converter {}", converterClass);
-//			binder.bind(converterClass);
-//		}
-//		for (final Class securityClass : getClasses("com.hoopladigital.security")) {
-//			log.debug("Registering security interceptor {}", securityClass);
-//			binder.bind(securityClass);
-//		}
-
 	}
 
 	@Provides

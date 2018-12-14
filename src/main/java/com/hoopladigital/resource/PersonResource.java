@@ -4,9 +4,8 @@ import com.hoopladigital.bean.Person;
 import com.hoopladigital.service.PersonService;
 
 import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Path("/people")
@@ -25,4 +24,30 @@ public class PersonResource {
 		return personService.getPersonList();
 	}
 
+	@GET
+	@Path("/{id}")
+	@Produces("application/json")
+	public Person getPerson(@PathParam("id") long id) {
+		return personService.getPerson(id);
+	}
+
+	@POST
+	@Produces("application/json")
+	public Person createPerson(Person person) {
+		return personService.createPerson(person);
+	}
+
+	@PUT
+	@Path("/{id}")
+	@Produces("application/json")
+	public Person updatePerson(@PathParam("id") long id, Person person) {
+		return personService.updatePerson(id, person);
+	}
+
+	@DELETE
+	@Path("/{id}")
+	public Response deletePerson(@PathParam("id") long id) {
+		personService.deletePerson(id);
+		return Response.noContent().build();
+	}
 }
